@@ -1,6 +1,8 @@
 package nio.wjchenge.netty.gateway.v3.extension;
 
 import nio.wjchenge.netty.gateway.v3.filter.HttpRequestFilter;
+import nio.wjchenge.netty.gateway.v3.router.HttpEndpointRouter;
+import nio.wjchenge.netty.gateway.v3.router.RandomHttpEndpointRouter;
 
 import java.util.*;
 
@@ -18,9 +20,11 @@ public class ExtensionLoader {
         return list;
     }
 
-    public static void main(String[] args) {
-        List<HttpRequestFilter> extension = ExtensionLoader.getExtension(HttpRequestFilter.class);
-        System.out.println(Arrays.toString(extension.toArray()));
+    public static <T> T getExtension(Class<T> clazz, T t) {
+        List<T> list = getExtension(clazz);
+        if (list == null || list.isEmpty()) {
+            return t;
+        }
+        return list.get(0);
     }
-
 }

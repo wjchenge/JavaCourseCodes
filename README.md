@@ -90,6 +90,25 @@ HttpServer服务运行结果如下:
 
 ### 作业4（选做）实现路由。
 
+[实现路由版本](03nio/src/main/java/nio/wjchenge/netty/gateway/v3)
+
+大体思路利用Java SPI扩展机制进行过滤器的扩展实现，与过滤器实现细节唯一不同的地方在于如果`不配置路由规则默认使用随机路由规则`，
+
+如果`配置多个路由规则则使用系统最先读取到的规则`为准
+
+#### 1、定义路由接口规范
+[HttpEndpointRouter](03nio/src/main/java/nio/wjchenge/netty/gateway/v3/router/HttpEndpointRouter.java)
+
+#### 2、路由具体扩展实现
+目前实现了随机算法、轮询算法、随机权重算法路由规则
+
+#### 3、扩展类加载器
+[ExtensionLoader](03nio/src/main/java/nio/wjchenge/netty/gateway/v3/extension/ExtensionLoader.java)
+
+#### 4、特定配置文件
+[META-INF/services/nio.wjchenge.netty.gateway.v3.router.HttpEndpointRouter](03nio/src/main/resources/META-INF/services/nio.wjchenge.netty.gateway.v3.router.HttpEndpointRouter)
+
+
 #### 随机路由算法
 
 **实现思路**

@@ -15,6 +15,8 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import javax.annotation.PostConstruct;
+import java.util.HashMap;
+import java.util.Map;
 
 @SpringBootApplication
 public class NettyGatewayApplication {
@@ -27,7 +29,10 @@ public class NettyGatewayApplication {
     public void init() throws InterruptedException {
         int port = 8808;
 
-        String proxyServerUrl = "http://127.0.0.1:8801";
+        Map<String, Integer> proxyServerUrlMap = new HashMap<>();
+        proxyServerUrlMap.put("http://127.0.0.1:8801", 20);
+        proxyServerUrlMap.put("http://127.0.0.1:8802", 30);
+        proxyServerUrlMap.put("http://127.0.0.1:8803", 50);
 
         EventLoopGroup bossGroup = new NioEventLoopGroup(2);
         EventLoopGroup workerGroup = new NioEventLoopGroup(16);
@@ -46,7 +51,7 @@ public class NettyGatewayApplication {
 
             b.group(bossGroup, workerGroup).channel(NioServerSocketChannel.class)
                     .handler(new LoggingHandler(LogLevel.INFO))
-                    .childHandler(new HttpInboundInitializer(proxyServerUrl));
+                    .childHandler(new HttpInboundInitializer(proxyServerUrlMap));
 
             Channel ch = b.bind(port).sync().channel();
             System.out.println("开启netty http服务器，监听地址和端口为 http://127.0.0.1:" + port + '/');

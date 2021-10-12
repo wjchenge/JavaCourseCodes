@@ -13,8 +13,11 @@ import lombok.extern.java.Log;
 import nio.wjchenge.netty.gateway.v3.extension.ExtensionLoader;
 import nio.wjchenge.netty.gateway.v3.filter.HttpRequestFilter;
 import nio.wjchenge.netty.gateway.v3.outbound.httpclient5.HttpClientHelper;
+import nio.wjchenge.netty.gateway.v3.router.HttpEndpointRouter;
+import nio.wjchenge.netty.gateway.v3.router.RandomHttpEndpointRouter;
 
 import java.util.List;
+import java.util.Map;
 
 import static io.netty.handler.codec.http.HttpHeaderNames.CONNECTION;
 import static io.netty.handler.codec.http.HttpHeaderValues.KEEP_ALIVE;
@@ -25,13 +28,16 @@ import static io.netty.handler.codec.http.HttpVersion.HTTP_1_1;
 @Log
 public class HttpInboundHandler extends ChannelInboundHandlerAdapter {
 
-    private String proxyServerUrl;
+    private Map<String, Integer> proxyServerUrlMap;
 
     private List<HttpRequestFilter> httpRequestFilters;
 
-    public HttpInboundHandler(String proxyServerUrl) {
-        this.proxyServerUrl = proxyServerUrl;
+    private HttpEndpointRouter httpEndpointRouter;
+
+    public HttpInboundHandler(Map<String, Integer> proxyServerUrlMap) {
+        this.proxyServerUrlMap = proxyServerUrlMap;
         this.httpRequestFilters = ExtensionLoader.getExtension(HttpRequestFilter.class);
+        this.httpEndpointRouter = ExtensionLoader.getExtension(HttpEndpointRouter.class, new RandomHttpEndpointRouter());
     }
 
     @Override
@@ -63,8 +69,10 @@ public class HttpInboundHandler extends ChannelInboundHandlerAdapter {
         String uri = fullRequest.uri();
         //logger.info("接收到的请求url为{}", uri);
         try {
+            // 根据路由规则获取后端服务地址
+            String proxyServerUrl = httpEndpointRouter.route(this.proxyServerUrlMap);
             // 对接上次作业的httpclient或者okhttp请求另一个url的响应数据
-            String value = HttpClientHelper.help(fullRequest.headers(), this.proxyServerUrl + uri);
+            String value = HttpClientHelper.help(fullRequest.headers(), proxyServerUrl + uri);
 
 //            httpGet ...  http://localhost:8801
 //            返回的响应，"hello,nio";
