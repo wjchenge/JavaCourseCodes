@@ -90,6 +90,83 @@ HttpServer服务运行结果如下:
 
 ### 作业4（选做）实现路由。
 
+#### 随机路由算法
+
+**实现思路**
+
+先生成随机数,然后根据随机数下标取集合的值
+
+[RandomHttpEndpointRouter](03nio/src/main/java/nio/wjchenge/netty/gateway/v3/router/RandomHttpEndpointRouter.java)
+
+#### 轮询路由算法
+
+**实现思路**
+
+按顺序循环取集合的值
+
+[RoundRibbonHttpEndpointRouter](03nio/src/main/java/nio/wjchenge/netty/gateway/v3/router/RoundRibbonHttpEndpointRouter.java)
+
+#### 随机权重路由算法
+
+**实现思路**
+
+方案1：根据服务配置的权重进行服务集合重新赋值，配置多少权重集合中就存在多少条记录。该方案实现简单，但如果权重配置过大则比较耗费内存。
+
+方案2：假设我们有一组服务[A, B, C], 他们对应的权重为[20, 30, 50], 权重总和为100。现在把这些权重值平铺在一维坐标上，分布情况[0, 20)  
+属于服务A, [20, 50) 属于服务B, [50, 100) 属于服务C, 然后生成 [0, 100) 范围的随机数，接下来计算该随机数属于哪个区间。
+
+方案2实现：[WeightRandomHttpEndpointRouter](03nio/src/main/java/nio/wjchenge/netty/gateway/v3/router/WeightRandomHttpEndpointRouter.java)
+
+
+####各路由算法测试结果（`测试10次，每次模拟调用服务10000次`）如下：
+
+- 随机路由算法
+
+```
+{server3=5377, server2=1839, server1=2784}
+{server2=4483, server1=5517}
+{server3=5503, server2=4497}
+{server3=4176, server1=5824}
+{server2=2809, server1=7191}
+{server2=8429, server1=1571}
+{server3=8889, server1=1111}
+{server3=3465, server2=3509, server1=3026}
+{server1=10000}
+{server3=6027, server2=3598, server1=375}
+```
+
+- 轮询路由算法
+
+```
+{server3=3334, server2=3333, server1=3333}
+{server3=3333, server2=3334, server1=3333}
+{server3=3333, server2=3333, server1=3334}
+{server3=3334, server2=3333, server1=3333}
+{server3=3333, server2=3334, server1=3333}
+{server3=3333, server2=3333, server1=3334}
+{server3=3334, server2=3333, server1=3333}
+{server3=3333, server2=3334, server1=3333}
+{server3=3333, server2=3333, server1=3334}
+{server3=3334, server2=3333, server1=3333}
+```
+- 随机权重路由算法
+
+```
+{server3=4951, server2=3120, server1=1929}
+{server3=5029, server2=3028, server1=1943}
+{server3=5128, server2=2915, server1=1957}
+{server3=4935, server2=3093, server1=1972}
+{server3=5069, server2=3003, server1=1928}
+{server3=5076, server2=3016, server1=1908}
+{server3=4975, server2=3090, server1=1935}
+{server3=5167, server2=2937, server1=1896}
+{server3=5038, server2=3051, server1=1911}
+{server3=5072, server2=3038, server1=1890}
+```
+
+---
+---
+
 
 ## week02作业
 
@@ -118,6 +195,9 @@ HttpServer服务运行结果如下:
     ----------------------------------------
     hello,nio1
 
+
+---
+---
 
 ## week01作业
 
