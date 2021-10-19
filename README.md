@@ -1,6 +1,26 @@
 # JavaCourseCodes
 java进阶训练营作业
 
+## week04作业
+
+### 作业2 （必做）思考有多少种方式，在main函数启动一个新线程，运行一个方法，拿到这个方法的返回值后，退出主线程？
+
+-  [不修改运行方法拿到运行结果](04concurrency/src/main/java/Homework.java)
+
+1. 使用 sleep 等待线程执行完成拿到结果
+2. 使用 join 等待线程执行完成拿到结果
+3. 使用 自旋机制 拿到结果
+4. 使用 Future 拿到结果
+5. 使用 阻塞队列 拿到结果
+
+-  [修改运行方法拿到运行结果](04concurrency/src/main/java/Homework.java)
+
+1. 使用 sleep 等待线程执行完成拿到结果
+2. 使用 join 等待线程执行完成拿到结果
+3. 使用 自旋机制 拿到结果
+4. 使用 Future 拿到结果
+5. 使用 阻塞队列 拿到结果
+
 ## week03作业
 
 ### 作业1（必做）整合你上次作业的 httpclient/okhttp  
