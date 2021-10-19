@@ -21,6 +21,11 @@ java进阶训练营作业
 4. 使用 Future 拿到结果
 5. 使用 阻塞队列 拿到结果
 
+### 作业4（必做）把多线程和并发相关知识梳理一遍，画一个脑图，截图上传到 GitHub 上
+
+[多线程和并发](04concurrency/src/main/java/多线程和并发.png)
+
+
 ## week03作业
 
 ### 作业1（必做）整合你上次作业的 httpclient/okhttp  
