@@ -4,14 +4,17 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class JDBCDemo1 {
+public class JDBCDemo2 {
 
     public static void insertData() throws SQLException, ClassNotFoundException {
-        String sql = "INSERT INTO test_1025(`name`, age) VALUES ('wjchenge', 30)";
+        String sql = "INSERT INTO test_1025(`name`, age) VALUES (?, ?)";
 
         Connection connection = getConnection();
-        Statement statement = connection.createStatement();
-        statement.execute(sql);
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1, "wjchenge");
+        statement.setInt(2, 30);
+        statement.execute();
+        connection.commit();
         statement.close();
         connection.close();
     }
@@ -38,21 +41,26 @@ public class JDBCDemo1 {
     }
 
     public static void updateData() throws SQLException, ClassNotFoundException {
-        String sql = "UPDATE test_1025 SET name = 'KK04' WHERE name = 'KK03'";
+        String sql = "UPDATE test_1025 SET name = ? WHERE name = ?";
 
         Connection connection = getConnection();
-        Statement statement = connection.createStatement();
-        statement.execute(sql);
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1,"KK04");
+        statement.setString(2,"KK03");
+        statement.execute();
+        connection.commit();
         statement.close();
         connection.close();
     }
 
     public static void deleteData() throws SQLException, ClassNotFoundException {
-        String sql = "DELETE FROM test_1025 WHERE name = 'wjchenge'";
+        String sql = "DELETE FROM test_1025 WHERE name = ?";
 
         Connection connection = getConnection();
-        Statement statement = connection.createStatement();
-        statement.execute(sql);
+        PreparedStatement statement = connection.prepareStatement(sql);
+        statement.setString(1,"wjchenge");
+        statement.execute();
+        connection.commit();
         statement.close();
         connection.close();
     }
@@ -62,7 +70,10 @@ public class JDBCDemo1 {
         String address = "jdbc:mysql://localhost:3306/wjchenge_test?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8";
         String user = "root";
         String password = "root";
-        return DriverManager.getConnection(address, user, password);
+        Connection connection = DriverManager.getConnection(address, user, password);
+        connection.setAutoCommit(false);
+        return connection;
+
     }
 
     @lombok.Data

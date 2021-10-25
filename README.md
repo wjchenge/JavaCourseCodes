@@ -25,11 +25,35 @@ Spring Boot 启动扫描需要自动装配的文件配置
 
 ### 作业10.（必做）研究一下 JDBC 接口和数据库连接池，掌握它们的设计和用法：
 
-1）使用 JDBC 原生接口，实现数据库的增删改查操作。  
+[init.sql](05spring/src/main/java/com/wjchenge/homework10/init.sql)
+
+1）使用 JDBC 原生接口，实现数据库的增删改查操作。 
+
+[JDBCDemo1](05spring/src/main/java/com/wjchenge/homework10/JDBCDemo1.java)
 
 2）使用事务，PrepareStatement 方式，批处理方式，改进上述操作。  
+[JDBCDemo2](05spring/src/main/java/com/wjchenge/homework10/JDBCDemo2.java)
+
 3）配置 Hikari 连接池，改进上述操作。提交代码到 GitHub。  
 
+[JDBCDemo3](05spring/src/main/java/com/wjchenge/homework10/JDBCDemo3.java)
+
+1. 添加依赖:
+```
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-jdbc</artifactId>
+</dependency>
+```
+
+2. 配置连接池:[application.properties](05spring/src/main/resources/application.properties)
+```
+spring.datasource.type=com.zaxxer.hikari.HikariDataSource
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/wjchenge_test?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8
+spring.datasource.hikari.username=root
+spring.datasource.hikari.password=root
+```
 
 ## week04作业
 
