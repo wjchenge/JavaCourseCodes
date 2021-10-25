@@ -11,6 +11,18 @@ java进阶训练营作业
 
 ### 作业8.（必做）给前面课程提供的 Student/Klass/School 实现自动配置和 Starter。
 
+[自定义Starter](05customer-starter) 两个主要类:
+
+1. [CustomerProperties](05customer-starter/src/main/java/com/wjchenge/customerstarter/properties/CustomerProperties.java)
+解析`customer`开头的配置文件属性
+2. [AutoConfiguration](05customer-starter/src/main/java/com/wjchenge/customerstarter/auto/AutoConfiguration.java)
+自动装配类触发条件:配置文件包含:`customer.id`
+3. [spring.factories](05customer-starter/src/main/resources/META-INF/spring.factories)
+Spring Boot 启动扫描需要自动装配的文件配置
+
+[测试类](05spring/src/test/java/com/wjchenge/ApplicationTests.java)运行效果: `Class1 have 1 students and one is Student(id=1000, name=KK102)`
+
+
 ### 作业10.（必做）研究一下 JDBC 接口和数据库连接池，掌握它们的设计和用法：
 
 1）使用 JDBC 原生接口，实现数据库的增删改查操作。  
