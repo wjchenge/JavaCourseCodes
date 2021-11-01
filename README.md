@@ -1,6 +1,12 @@
 # JavaCourseCodes
 java进阶训练营作业
 
+## week06作业
+
+### 作业6.（必做）基于电商交易场景（用户、商品、订单），设计一套简单的表结构，提交 DDL 的 SQL 文件到 Github（后面 2 周的作业依然要是用到这个表结构）。
+
+[init.sql](06db/init.sql)
+
 ## week05作业
 
 ### 作业2.（必做）写代码实现 Spring Bean 的装配，方式越多越好（XML、Annotation 都可以）, 提交到 GitHub。
