@@ -8,7 +8,10 @@ java进阶训练营作业
 1. 使用 PreparedStatement 逐条提交插入
 2. 使用 PreparedStatement 批量提交插入
 3. 使用 PreparedStatement 分批次批量提交(`每次提交10000条`)插入
-4. 使用 PreparedStatement 多线程批量提交插入(`使用最大线程数为8的线程池,每个线程操作5000条数据`)
+4. 使用 PreparedStatement 多线程批量提交插入(`使用最大线程数为16的线程池,每个线程操作5000条数据`)
+5. 使用 PreparedStatement 拼接为1条sql语句插入,(INSERT INTO TABLE () VALUES (),(),()...)
+6. 使用 PreparedStatement 多线程拼接sql语句插入,(INSERT INTO TABLE () VALUES (),(),()...) (`使用最大线程数为16的线程池,每个线程操作5000条数据`)
+7. 使用 PreparedStatement 使用线程池多线程拼接sql语句插入,(INSERT INTO TABLE () VALUES (),(),()...) (`使用最大线程数为16的线程池,每个线程操作5000条数据`)
 
 ####执行效率如下:
 
@@ -18,8 +21,10 @@ java进阶训练营作业
 | 1  | 2124064 ms |
 | 2  | 2030671 ms |
 | 3  | 1979680 ms |
-| 4  |  333344 ms |
-
+| 4  |  167804 ms |
+| 5  |    12190ms |
+| 6  |     7556ms |
+| 7  |     5009ms |
 
 ### 作业9.（必做）读写分离 - 动态切换数据源版本 1.0
 

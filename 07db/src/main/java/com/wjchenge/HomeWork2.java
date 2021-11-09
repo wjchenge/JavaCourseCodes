@@ -1,6 +1,8 @@
 package com.wjchenge;
 
 import com.google.common.collect.Lists;
+import com.zaxxer.hikari.HikariConfig;
+import com.zaxxer.hikari.HikariDataSource;
 import lombok.Data;
 
 import java.sql.Connection;
@@ -21,16 +23,31 @@ import java.util.concurrent.Executors;
  */
 public class HomeWork2 {
 
+    private static HikariDataSource DATA_SOURCE = null;
+
+     static {
+        HikariConfig config = new HikariConfig();
+        config.setJdbcUrl("jdbc:mysql://localhost:3306/wjchenge_test?useUnicode=true&characterEncoding=utf8&zeroDateTimeBehavior=convertToNull&useSSL=true&serverTimezone=GMT%2B8");
+        config.setUsername("root");
+        config.setPassword("root");
+        config.setMinimumIdle(20);
+        config.setMaximumPoolSize(20);
+        DATA_SOURCE = new HikariDataSource(config);
+    }
+
     public static void main(String[] args) throws SQLException, ClassNotFoundException, InterruptedException {
 //        method1();
 //        method2();
 //        method3();
-        method4();
+//        method4();
+//        method5();
+//        method6();
+        method7();
     }
 
 
     /**
-     * 使用 PreparedStatement 逐条直接插入
+     * 使用 PreparedStatement 逐条提交插入
      */
     public static void method1() throws SQLException, ClassNotFoundException {
         List<OrderData> list = getOrderData(1000000);
@@ -61,7 +78,7 @@ public class HomeWork2 {
 
 
     /**
-     * 使用 PreparedStatement 批量插入
+     * 使用 PreparedStatement 批量提交插入
      */
     public static void method2() throws SQLException, ClassNotFoundException {
         List<OrderData> list = getOrderData(1000000);
@@ -92,7 +109,7 @@ public class HomeWork2 {
     }
 
     /**
-     * 使用 PreparedStatement 分批次批量插入
+     * 使用 PreparedStatement 分批次批量提交(`每次提交10000条`)插入
      */
     public static void method3() throws SQLException, ClassNotFoundException {
         List<OrderData> list = getOrderData(1000000);
@@ -132,13 +149,13 @@ public class HomeWork2 {
 
 
     /**
-     * 使用 PreparedStatement 多线程批量插入
+     * 使用 PreparedStatement 多线程批量提交插入(`使用最大线程数为16的线程池,每个线程操作5000条数据`)
      */
     public static void method4() throws InterruptedException {
         List<OrderData> list = getOrderData(1000000);
         String sql = "INSERT INTO t_order (order_no,user_id,shipping_id,total_payment,real_payment,payment_type,postage,`status`,payment_time,send_time,end_time,create_time) " +
                 "VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
-        ExecutorService service = Executors.newFixedThreadPool(8);
+        ExecutorService service = Executors.newFixedThreadPool(16);
         List<List<OrderData>> partition = Lists.partition(list, 5000);
         CountDownLatch countDownLatch = new CountDownLatch(partition.size());
         long begin = System.currentTimeMillis();
@@ -187,6 +204,156 @@ public class HomeWork2 {
 
     }
 
+
+    /**
+     * 使用 PreparedStatement 拼接为1条sql语句插入,(INSERT INTO TABLE () VALUES (),(),()...)
+     */
+    public static void method5() throws SQLException, ClassNotFoundException {
+        List<OrderData> list = getOrderData(1000000);
+        StringBuilder sql = new StringBuilder(2000000);
+        sql.append("INSERT INTO t_order (order_no,user_id,shipping_id,total_payment,real_payment,payment_type,postage,`status`,payment_time,send_time,end_time,create_time) VALUES ");
+        Connection connection = getConnection();
+        list.forEach(v -> {
+            sql.append("(?,?,?,?,?,?,?,?,?,?,?,?),");
+        });
+        PreparedStatement ps = connection.prepareStatement(sql.substring(0, sql.length() - 1));
+        long begin = System.currentTimeMillis();
+        int index = 1;
+        for (OrderData orderData : list) {
+            ps.setLong(index++, orderData.orderNo);
+            ps.setLong(index++, orderData.userId);
+            ps.setLong(index++, orderData.shippingId);
+            ps.setInt(index++, orderData.totalPayment);
+            ps.setInt(index++, orderData.realPayment);
+            ps.setInt(index++, orderData.paymentType);
+            ps.setInt(index++, orderData.postage);
+            ps.setInt(index++, orderData.status);
+            ps.setDate(index++, new java.sql.Date(orderData.paymentTime.getTime()));
+            ps.setDate(index++, new java.sql.Date(orderData.sendTime.getTime()));
+            ps.setDate(index++, new java.sql.Date(orderData.endTime.getTime()));
+            ps.setDate(index++, new java.sql.Date(orderData.createTime.getTime()));
+        }
+        ps.execute();
+        System.out.println("--总耗时 = " + (System.currentTimeMillis() - begin) + "ms");
+        ps.close();
+        connection.close();
+    }
+
+
+    /**
+     * 使用 PreparedStatement 多线程拼接sql语句插入,(INSERT INTO TABLE () VALUES (),(),()...) (`使用最大线程数为16的线程池,每个线程操作5000条数据`)
+     */
+    public static void method6() throws InterruptedException {
+        List<OrderData> list = getOrderData(1000000);
+        ExecutorService service = Executors.newFixedThreadPool(16);
+        List<List<OrderData>> partition = Lists.partition(list, 1000);
+        CountDownLatch countDownLatch = new CountDownLatch(partition.size());
+        long begin = System.currentTimeMillis();
+        for (List<OrderData> dataList : partition) {
+            Thread thread = new Thread(() -> {
+                StringBuilder sql = new StringBuilder(200000);
+                sql.append("INSERT INTO t_order (order_no,user_id,shipping_id,total_payment,real_payment,payment_type,postage,`status`,payment_time,send_time,end_time,create_time) VALUES ");
+                Connection connection = null;
+                PreparedStatement ps = null;
+                try {
+                    connection = getConnection();
+                    dataList.forEach(v -> {
+                        sql.append("(?,?,?,?,?,?,?,?,?,?,?,?),");
+                    });
+                    ps = connection.prepareStatement(sql.substring(0, sql.length() - 1));
+                } catch (SQLException | ClassNotFoundException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    int index = 1;
+                    for (OrderData orderData : dataList) {
+
+                        ps.setLong(index++, orderData.orderNo);
+                        ps.setLong(index++, orderData.userId);
+                        ps.setLong(index++, orderData.shippingId);
+                        ps.setInt(index++, orderData.totalPayment);
+                        ps.setInt(index++, orderData.realPayment);
+                        ps.setInt(index++, orderData.paymentType);
+                        ps.setInt(index++, orderData.postage);
+                        ps.setInt(index++, orderData.status);
+                        ps.setDate(index++, new java.sql.Date(orderData.paymentTime.getTime()));
+                        ps.setDate(index++, new java.sql.Date(orderData.sendTime.getTime()));
+                        ps.setDate(index++, new java.sql.Date(orderData.endTime.getTime()));
+                        ps.setDate(index++, new java.sql.Date(orderData.createTime.getTime()));
+                    }
+                    ps.execute();
+                    ps.close();
+                    connection.close();
+                    countDownLatch.countDown();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            });
+            service.submit(thread);
+        }
+        countDownLatch.await();
+        System.out.println("--总耗时 = " + (System.currentTimeMillis() - begin) + "ms");
+        service.shutdown();
+
+    }
+
+    /**
+     * 使用 PreparedStatement 使用线程池多线程拼接sql语句插入,(INSERT INTO TABLE () VALUES (),(),()...) (`使用最大线程数为16的线程池,每个线程操作5000条数据`)
+     */
+    public static void method7() throws InterruptedException {
+        List<OrderData> list = getOrderData(1000000);
+        ExecutorService service = Executors.newFixedThreadPool(16);
+        List<List<OrderData>> partition = Lists.partition(list, 1000);
+        CountDownLatch countDownLatch = new CountDownLatch(partition.size());
+        long begin = System.currentTimeMillis();
+        for (List<OrderData> dataList : partition) {
+            Thread thread = new Thread(() -> {
+                StringBuilder sql = new StringBuilder(200000);
+                sql.append("INSERT INTO t_order (order_no,user_id,shipping_id,total_payment,real_payment,payment_type,postage,`status`,payment_time,send_time,end_time,create_time) VALUES ");
+                Connection connection = null;
+                PreparedStatement ps = null;
+                try {
+                    connection = DATA_SOURCE.getConnection();
+                    dataList.forEach(v -> {
+                        sql.append("(?,?,?,?,?,?,?,?,?,?,?,?),");
+                    });
+                    ps = connection.prepareStatement(sql.substring(0, sql.length() - 1));
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    int index = 1;
+                    for (OrderData orderData : dataList) {
+
+                        ps.setLong(index++, orderData.orderNo);
+                        ps.setLong(index++, orderData.userId);
+                        ps.setLong(index++, orderData.shippingId);
+                        ps.setInt(index++, orderData.totalPayment);
+                        ps.setInt(index++, orderData.realPayment);
+                        ps.setInt(index++, orderData.paymentType);
+                        ps.setInt(index++, orderData.postage);
+                        ps.setInt(index++, orderData.status);
+                        ps.setDate(index++, new java.sql.Date(orderData.paymentTime.getTime()));
+                        ps.setDate(index++, new java.sql.Date(orderData.sendTime.getTime()));
+                        ps.setDate(index++, new java.sql.Date(orderData.endTime.getTime()));
+                        ps.setDate(index++, new java.sql.Date(orderData.createTime.getTime()));
+                    }
+                    ps.execute();
+                    ps.close();
+                    connection.close();
+                    countDownLatch.countDown();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            });
+            service.submit(thread);
+        }
+        countDownLatch.await();
+        System.out.println("--总耗时 = " + (System.currentTimeMillis() - begin) + "ms");
+        service.shutdown();
+
+    }
+
     private static List<OrderData> getOrderData(int num) {
         List<OrderData> list = new ArrayList<>(num);
         while (num-- > 0) {
@@ -220,7 +387,6 @@ public class HomeWork2 {
         String password = "root";
         return DriverManager.getConnection(address, user, password);
     }
-
 
     @Data
     public static class OrderData {
