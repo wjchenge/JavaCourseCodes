@@ -20,8 +20,8 @@ SET FOREIGN_KEY_CHECKS = 0;
 -- ----------------------------
 -- Table structure for address
 -- ----------------------------
-DROP TABLE IF EXISTS `address`;
-CREATE TABLE `address`  (
+DROP TABLE IF EXISTS `t_address`;
+CREATE TABLE `t_address`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `user_id` bigint(20) NULL DEFAULT NULL COMMENT 'user表主键id',
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '收货人',
@@ -36,10 +36,10 @@ CREATE TABLE `address`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '收货地址' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Table structure for category
+-- Table structure for t_category
 -- ----------------------------
-DROP TABLE IF EXISTS `category`;
-CREATE TABLE `category`  (
+DROP TABLE IF EXISTS `t_category`;
+CREATE TABLE `t_category`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `parent_id` int(11) NULL DEFAULT NULL COMMENT '上级id, id=0为根节点',
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '类别名称',
@@ -51,10 +51,10 @@ CREATE TABLE `category`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '类别表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Table structure for order
+-- Table structure for t_order
 -- ----------------------------
-DROP TABLE IF EXISTS `order`;
-CREATE TABLE `order`  (
+DROP TABLE IF EXISTS `t_order`;
+CREATE TABLE `t_order`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `order_no` bigint(20) NULL DEFAULT NULL COMMENT '订单编号',
   `user_id` bigint(20) NULL DEFAULT NULL COMMENT '用户id',
@@ -72,10 +72,10 @@ CREATE TABLE `order`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Table structure for order_item
+-- Table structure for t_order_item
 -- ----------------------------
-DROP TABLE IF EXISTS `order_item`;
-CREATE TABLE `order_item`  (
+DROP TABLE IF EXISTS `t_order_item`;
+CREATE TABLE `t_order_item`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `order_id` bigint(20) NULL DEFAULT NULL COMMENT '订单id',
   `product_id` bigint(20) NULL DEFAULT NULL COMMENT '商品id',
@@ -89,10 +89,10 @@ CREATE TABLE `order_item`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '订单商品详情表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Table structure for product
+-- Table structure for t_product
 -- ----------------------------
-DROP TABLE IF EXISTS `product`;
-CREATE TABLE `product`  (
+DROP TABLE IF EXISTS `t_product`;
+CREATE TABLE `t_product`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `category_id` int(11) NOT NULL COMMENT '分类id, category表主键',
   `name` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL COMMENT '商品名称',
@@ -108,10 +108,10 @@ CREATE TABLE `product`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '商品表' ROW_FORMAT = Dynamic;
 
 -- ----------------------------
--- Table structure for user
+-- Table structure for t_user
 -- ----------------------------
-DROP TABLE IF EXISTS `user`;
-CREATE TABLE `user`  (
+DROP TABLE IF EXISTS `t_user`;
+CREATE TABLE `t_user`  (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '用户名',
   `nick_name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '昵称',
@@ -123,3 +123,4 @@ CREATE TABLE `user`  (
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8 COLLATE = utf8_general_ci COMMENT = '用户表' ROW_FORMAT = Dynamic;
 
 SET FOREIGN_KEY_CHECKS = 1;
+

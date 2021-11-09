@@ -1,11 +1,48 @@
 # JavaCourseCodes
 java进阶训练营作业
 
+## week07作业
+
+### 作业2.（必做）按自己设计的表结构，插入 100 万订单模拟数据，测试不同方式的插入效率
+
+1. 使用 PreparedStatement 逐条提交插入
+2. 使用 PreparedStatement 批量提交插入
+3. 使用 PreparedStatement 分批次批量提交(`每次提交10000条`)插入
+4. 使用 PreparedStatement 多线程批量提交插入(`使用最大线程数为8的线程池,每个线程操作5000条数据`)
+
+####执行效率如下:
+
+
+|  方式   | 执行时间  |
+|  :----  | ----:  |
+| 1  | 2124064 ms |
+| 2  | 2030671 ms |
+| 3  | 1979680 ms |
+| 4  |  333344 ms |
+
+
+### 作业9.（必做）读写分离 - 动态切换数据源版本 1.0
+
+[作业9](07db/src/main/java/com/wjchenge/homework9) 实现思路如下:
+1. [数据源上下文枚举类](07db/src/main/java/com/wjchenge/homework9/DataSource.java)
+2. [数据源上下文持有者](07db/src/main/java/com/wjchenge/homework9/DataSourceContextHolder.java)
+3. [数据源路由](07db/src/main/java/com/wjchenge/homework9/MyRoutingDataSource.java)
+4. [配置类](07db/src/main/java/com/wjchenge/homework9/RoutingConfiguration.java)
+5. [多数据源配置文件](07db/src/main/resources/application.properties)
+6. [数据库初始脚本](07db/src/main/resources/init.sql)
+7. [测试类](07db/src/test/java/com/wjchenge/ApplicationTests.java)
+
+---
+---
+
 ## week06作业
 
 ### 作业6.（必做）基于电商交易场景（用户、商品、订单），设计一套简单的表结构，提交 DDL 的 SQL 文件到 Github（后面 2 周的作业依然要是用到这个表结构）。
 
 [init.sql](06db/init.sql)
+
+---
+---
 
 ## week05作业
 
@@ -60,6 +97,9 @@ spring.datasource.url=jdbc:mysql://localhost:3306/wjchenge_test?useUnicode=true&
 spring.datasource.hikari.username=root
 spring.datasource.hikari.password=root
 ```
+
+---
+---
 
 ## week04作业
 
