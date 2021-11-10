@@ -11,7 +11,7 @@ java进阶训练营作业
 4. 使用 PreparedStatement 多线程批量提交插入(`使用最大线程数为16的线程池,每个线程操作5000条数据`)
 5. 使用 PreparedStatement 拼接为1条sql语句插入,(INSERT INTO TABLE () VALUES (),(),()...)
 6. 使用 PreparedStatement 多线程拼接sql语句插入,(INSERT INTO TABLE () VALUES (),(),()...) (`使用最大线程数为16的线程池,每个线程操作5000条数据`)
-7. 使用 PreparedStatement 使用线程池多线程拼接sql语句插入,(INSERT INTO TABLE () VALUES (),(),()...) (`使用最大线程数为16的线程池,每个线程操作5000条数据`)
+7. 使用 PreparedStatement 使用`数据库线程池`多线程拼接sql语句插入,(INSERT INTO TABLE () VALUES (),(),()...) (`使用最大线程数为16的线程池,每个线程操作5000条数据`)
 
 ####执行效率如下:
 
@@ -36,6 +36,18 @@ java进阶训练营作业
 5. [多数据源配置文件](07db/src/main/resources/application.properties)
 6. [数据库初始脚本](07db/src/main/resources/init.sql)
 7. [测试类](07db/src/test/java/com/wjchenge/ApplicationTests.java)
+
+### 作业10.（必做）读写分离 - 数据库框架版本 2.0
+
+[作业10](07shardingsphere) 实现思路如下:
+
+根据`name`字段插入的内容,如果内容为`master`插入`master`库, 内容为`slave`插入`slave`库
+
+1. [多数据源配置文件](07shardingsphere/src/main/resources/application.properties)
+2. [数据库初始脚本](07db/src/main/resources/init.sql)
+3. [测试类](07shardingsphere/src/test/java/com/wjchenge/shardingsphere/ApplicationTests.java)
+
+
 
 ---
 ---
