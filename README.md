@@ -1,6 +1,20 @@
 # JavaCourseCodes
 java进阶训练营作业
 
+
+## week08作业
+
+### 作业2.（必做）设计对前面的订单表数据进行水平分库分表，拆分 2 个库，每个库 16 张表。并在新结构在演示常见的增删改查操作。代码、sql 和配置文件，上传到 Github
+
+1. 根据 `id % 2` 规则分库, 根据 `user_id % 16` 规则分表
+2. [多数据源配置文件](08shardingsphere/src/main/resources/application-homework2.properties)
+3. [数据库初始脚本](08shardingsphere/src/main/resources/init.sql)
+4. [测试类](08shardingsphere/src/test/java/com/wjchenge/HomeWork2.java)
+
+
+---
+---
+
 ## week07作业
 
 ### 作业2.（必做）按自己设计的表结构，插入 100 万订单模拟数据，测试不同方式的插入效率
