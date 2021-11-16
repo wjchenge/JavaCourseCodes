@@ -8,9 +8,22 @@ java进阶训练营作业
 
 1. 根据 `id % 2` 规则分库, 根据 `user_id % 16` 规则分表
 2. [多数据源配置文件](08shardingsphere/src/main/resources/application-homework2.properties)
-3. [数据库初始脚本](08shardingsphere/src/main/resources/init.sql)
+3. [数据库初始脚本](08shardingsphere/src/main/resources/homework2-init.sql)
 4. [测试类](08shardingsphere/src/test/java/com/wjchenge/HomeWork2.java)
 
+### 作业6.（必做）基于 hmily TCC 或 ShardingSphere 的 Atomikos XA 实现一个简单的分布式事务应用 demo（二选一），提交到 Github。
+
+基于 ShardingSphere 的 Atomikos XA 实现的demo
+
+1. [事务管理器配置](08shardingsphere/src/main/java/com/wjchenge/TransactionConfiguration.java)
+2. [多数据配置文件](08shardingsphere/src/main/resources/application-homework6.properties)
+3. [测试类](08shardingsphere/src/test/java/com/wjchenge/HomeWork6.java)
+
+测试总结:
+1. 使用 shardingsphere 版本 `5.0.0` 和 `5.0.alpha` 测试返回 TransactionType 为 `LOCAL`, 但测试提交成功\失败数据库数据符合预期
+2. 使用 shardingsphere 版本 `5.0.beta` 测试返回 TransactionType 为 `XA`, 数据库数据结果符合预期
+3. 使用 shardingsphere 版本 `5.0.0` 和 `5.0.alpha` 使用事务注解类 `ShardingSphereTransactionType`
+4. 使用 shardingsphere 版本 `5.0.beta`             使用事务注解类 `ShardingTransactionType`
 
 ---
 ---

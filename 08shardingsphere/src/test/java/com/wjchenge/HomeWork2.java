@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -23,8 +24,9 @@ public class HomeWork2 {
     private JdbcTemplate jdbcTemplate;
 
     @Test
+    @Transactional
     void testInsert() {
-        List<Object[]> orders = getOrders(100);
+        List<Object[]> orders = getOrders(2);
         jdbcTemplate.batchUpdate(INSERT_SQL, orders);
 
     }
