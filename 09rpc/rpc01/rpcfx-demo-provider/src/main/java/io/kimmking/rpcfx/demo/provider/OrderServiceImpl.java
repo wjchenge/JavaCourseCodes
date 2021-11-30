@@ -1,8 +1,10 @@
 package io.kimmking.rpcfx.demo.provider;
 
+import io.kimmking.rpcfx.annotation.WjchengeService;
 import io.kimmking.rpcfx.demo.api.Order;
 import io.kimmking.rpcfx.demo.api.OrderService;
 
+@WjchengeService
 public class OrderServiceImpl implements OrderService {
 
     @Override

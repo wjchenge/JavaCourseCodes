@@ -4,6 +4,8 @@ package io.kimmking.rpcfx.client;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.parser.ParserConfig;
 import io.kimmking.rpcfx.api.*;
+import io.kimmking.rpcfx.discovery.ServiceDiscovery;
+import io.kimmking.rpcfx.discovery.ZookeeperServiceDiscovery;
 import net.bytebuddy.ByteBuddy;
 import net.bytebuddy.dynamic.loading.ClassLoadingStrategy;
 import net.bytebuddy.implementation.MethodDelegation;
@@ -31,18 +33,21 @@ public final class Rpcfx {
         ParserConfig.getGlobalInstance().addAccept("io.kimmking");
     }
 
-    public static <T, filters> T createFromRegistry(final Class<T> serviceClass, final String packageName, final String zkUrl, Router router, LoadBalancer loadBalance, Filter filter) {
+    public static <T, filters> T createFromRegistry(final Class<T> serviceClass, final String packageName, Filter... filter) {
 
         // 加filte之一
 
         // curator Provider list from zk
         List<String> invokers = new ArrayList<>();
         // 1. 简单：从zk拿到服务提供的列表
+        ServiceDiscovery serviceDiscovery = new ZookeeperServiceDiscovery();
+        String url = serviceDiscovery.discovery(serviceClass.getName());
+
         // 2. 挑战：监听zk的临时节点，根据事件更新这个list（注意，需要做个全局map保持每个服务的提供者List）
-
-        List<String> urls = router.route(invokers);
-
-        String url = loadBalance.select(urls); // router, loadbalance
+        serviceDiscovery.registryWatch(serviceClass.getName());
+//        List<String> urls = router.route(invokers);
+//
+//        String url = loadBalance.select(urls); // router, loadbalance
 
         return (T) create(serviceClass, packageName, url, filter);
 

@@ -26,7 +26,8 @@ public class NettyClient {
         CountDownLatch countDownLatch = new CountDownLatch(1);
         EventLoopGroup workerGroup = new NioEventLoopGroup();
         try {
-            URI uri = new URI(url);
+            String tmpUrl = url.startsWith("http") ? url : "http://" + url;
+            URI uri = new URI(tmpUrl);
             String host = uri.getHost() == null ? "127.0.0.1" : uri.getHost();
             int port = uri.getPort();
             Bootstrap b = new Bootstrap();
