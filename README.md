@@ -2,6 +2,31 @@
 java进阶训练营作业
 
 
+## week11作业
+
+### 作业8.（必做）基于 Redis 封装分布式数据操作：
+
+- 在 Java 中实现一个简单的分布式锁；  
+
+    v1版本不支持锁重入，v2版本支持锁的重入
+
+1. [基于RedisTemplate实现的v1版本](10cache/lock/src/main/java/com/wjchenge/lock/homework4/RedisLockV1.java)
+2. [基于 Redisson实现的v2版本](10cache/lock/src/main/java/com/wjchenge/lock/homework4/RedisLockV2.java)
+3. [v1和v2版本对应的单元测试类](10cache/lock/src/test/java/com/wjchenge/lock/homework4/LockApplicationTests.java)
+
+- 在 Java 中实现一个分布式计数器，模拟减库存。
+
+1. [具体实现类](10cache/lock/src/main/java/com/wjchenge/lock/homework4/RedisStockServiceImpl.java)
+2. [单元测试类](10cache/lock/src/test/java/com/wjchenge/lock/homework4/RedisStockServiceImplTest.java)
+
+
+
+### 作业9.（必做）基于 Redis 的 PubSub 实现订单异步处理
+
+1.[具体实现](10cache/lock/src/main/java/com/wjchenge/lock/homework5)
+2.[单元测试类](10cache/lock/src/test/java/com/wjchenge/lock/homework5/RedisMessagePublisherTest.java)
+
+
 ## week08作业
 
 ### 作业2.（必做）设计对前面的订单表数据进行水平分库分表，拆分 2 个库，每个库 16 张表。并在新结构在演示常见的增删改查操作。代码、sql 和配置文件，上传到 Github
