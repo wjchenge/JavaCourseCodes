@@ -2,6 +2,57 @@
 java进阶训练营作业
 
 
+## week12作业
+
+### 作业1.（必做）配置 redis 的主从复制，sentinel 高可用，Cluster 集群。
+            
+1. 配置 redis 的主从复制:
+
+启动两个redis-server, 端口分别为6379、6380
+
+docker run -p 6379:6379 -v /d/wj_work/redis:/usr/local/etc/redis --network host --name redis-6379 -d redis redis-server /usr/local/etc/redis/redis-6379.conf
+
+docker run -p 6380:6380 -v /d/wj_work/redis:/usr/local/etc/redis  --network host --name redis-6380 -d redis redis-server /usr/local/etc/redis/redis-6380.conf
+
+- 方式1、通过在redis-6380命令行执行：SLAVEOF 10.1.3.89 6379 (宿主机ip: 10.1.3.89)
+- 方式2、配置redis-6380.conf文件: replicaof 127.0.0.1 6379
+
+方式1的方式从服务重启后主从关系会丢失，而第2种方式主从关系会持久化
+
+[redis-6379.conf](10cache/ha/config/redis-6379.conf)  
+[redis-6380.conf](10cache/ha/config/redis-6380.conf)
+
+2. sentinel 高可用
+
+docker run -p 26379:26379 -v /d/wj_work/redis:/usr/local/etc/redis --network host --name redis-sentinel-1 -d redis redis-sentinel /usr/local/etc/redis/sentinel-1.conf
+
+docker run -p 26380:26380 -v /d/wj_work/redis:/usr/local/etc/redis --network host --name redis-sentinel-2 -d redis redis-sentinel /usr/local/etc/redis/sentinel-2.conf
+
+docker run -p 26381:26381 -v /d/wj_work/redis:/usr/local/etc/redis --network host --name redis-sentinel-3 -d redis redis-sentinel /usr/local/etc/redis/sentinel-3.conf
+
+[sentinel-1.conf](10cache/ha/config/sentinel-1.conf)  
+[sentinel-2.conf](10cache/ha/config/sentinel-2.conf)  
+[sentinel-3.conf](10cache/ha/config/sentinel-3.conf)
+
+3. Cluster 集群
+
+docker run -p 16379:6379 --name redis-16379 -d redis redis-server --cluster-enabled yes
+
+docker run -p 16380:6379 --name redis-16380 -d redis redis-server --cluster-enabled yes
+
+docker run -p 16381:6379 --name redis-16381 -d redis redis-server --cluster-enabled yes
+
+docker run -p 16382:6379 --name redis-16382 -d redis redis-server --cluster-enabled yes
+
+docker run -p 16383:6379 --name redis-16383 -d redis redis-server --cluster-enabled yes
+
+docker run -p 16384:6379 --name redis-16384 -d redis redis-server --cluster-enabled yes
+
+
+redis-cli --cluster create --cluster-replicas 1 10.1.3.89:16379 10.1.3.89:16380 10.1.3.89:16381 10.1.3.89:16382 10.1.3.89:16383 10.1.3.89:16384
+
+
+
 ## week11作业
 
 ### 作业8.（必做）基于 Redis 封装分布式数据操作：
@@ -24,7 +75,13 @@ java进阶训练营作业
 ### 作业9.（必做）基于 Redis 的 PubSub 实现订单异步处理
 
 1.[具体实现](10cache/lock/src/main/java/com/wjchenge/lock/homework5)
-2.[单元测试类](10cache/lock/src/test/java/com/wjchenge/lock/homework5/RedisMessagePublisherTest.java)
+2.[单元测试类](10cache/lock/src/test/java/com/wjchenge/lock/homework5/RedisMessagePublisherTest.java76以有有有有有有有有有有有有有有有有有有有777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777777kjmkjmkjmkjmkjmkjmk
+
+
+
+
+
+)
 
 
 ## week08作业
