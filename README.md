@@ -36,22 +36,25 @@ docker run -p 26381:26381 -v /d/wj_work/redis:/usr/local/etc/redis --network hos
 
 3. Cluster 集群
 
-docker run -p 16379:6379 --name redis-16379 -d redis redis-server --cluster-enabled yes
-
-docker run -p 16380:6379 --name redis-16380 -d redis redis-server --cluster-enabled yes
-
-docker run -p 16381:6379 --name redis-16381 -d redis redis-server --cluster-enabled yes
-
-docker run -p 16382:6379 --name redis-16382 -d redis redis-server --cluster-enabled yes
-
-docker run -p 16383:6379 --name redis-16383 -d redis redis-server --cluster-enabled yes
-
-docker run -p 16384:6379 --name redis-16384 -d redis redis-server --cluster-enabled yes
-
-
-redis-cli --cluster create --cluster-replicas 1 10.1.3.89:16379 10.1.3.89:16380 10.1.3.89:16381 10.1.3.89:16382 10.1.3.89:16383 10.1.3.89:16384
+docker run -p 6390:6390 -p 16390:16390 --name redis-6390 -d redis redis-server --cluster-enabled yes --cluster-announce-ip 10.1.3.89 --port 6390
+                        
+docker run -p 6391:6391 -p 16391:16391 --name redis-6391 -d redis redis-server --cluster-enabled yes --cluster-announce-ip 10.1.3.89 --port 6391
+                        
+docker run -p 6392:6392 -p 16392:16392 --name redis-6392 -d redis redis-server --cluster-enabled yes --cluster-announce-ip 10.1.3.89 --port 6392
+                        
+docker run -p 6393:6393 -p 16393:16393 --name redis-6393 -d redis redis-server --cluster-enabled yes --cluster-announce-ip 10.1.3.89 --port 6393
+                        
+docker run -p 6394:6394 -p 16394:16394 --name redis-6394 -d redis redis-server --cluster-enabled yes --cluster-announce-ip 10.1.3.89 --port 6394
+                        
+docker run -p 6395:6395 -p 16395:16395 --name redis-6395 -d redis redis-server --cluster-enabled yes --cluster-announce-ip 10.1.3.89 --port 6395
 
 
+redis-cli --cluster create --cluster-replicas 1 10.1.3.89:6390 10.1.3.89:6391 10.1.3.89:6392 10.1.3.89:6393 10.1.3.89:6394 10.1.3.89:6395
+![确认信息](10cache/images/20211213175221.png)
+
+### 作业6.（必做）搭建 ActiveMQ 服务，基于 JMS，写代码分别实现对于 queue 和 topic 的消息生产和消费，代码提交到 github。
+
+[代码实现](11mq/activemq-demo)
 
 ## week11作业
 
