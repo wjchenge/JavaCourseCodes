@@ -2,6 +2,64 @@
 java进阶训练营作业
 
 
+## week13作业
+
+### 作业1.（必做）搭建一个3节点 Kafka 集群，测试功能和性能；实现 spring kafka下对 Kafka 集群的操作，将代码提交GitHub。
+
+- 配置文件
+
+[server9091.properties](11mq/kafka-cluster-config/server9091.properties)  
+[server9092.properties](11mq/kafka-cluster-config/server9092.properties)  
+[server9093.properties](11mq/kafka-cluster-config/server9093.properties)
+
+- 启动命令：
+
+kafka-server-start.bat ../../config/server9001.properties  
+kafka-server-start.bat ../../config/server9002.properties  
+kafka-server-start.bat ../../config/server9003.properties 
+
+- 创建topic
+
+kafka-topics.bat --zookeeper localhost:2181 --create --topic test32 --partitions 3 --replication-factor 2
+
+- 生产者性能测试
+
+kafka-producer-perf-test.bat --topic test32 --num-records 100000 --record-size 1000 --throughput 200000 --producer-props bootstrap.servers=localhost:9092
+
+```
+D:\kafka_2.13-2.7.0\bin\windows>kafka-producer-perf-test.bat --topic test32 --num-records 100000 --record-size 1000 --throughput 200000 --producer-props bootstrap.servers=localhost:9092
+100000 records sent, 39984.006397 records/sec (38.13 MB/sec), 560.85 ms avg latency, 950.00 ms max latency, 534 ms 50th, 892 ms 95th, 947 ms 99th, 949 ms 99.9th.
+
+D:\kafka_2.13-2.7.0\bin\windows>kafka-producer-perf-test.bat --topic test32 --num-records 100000 --record-size 1000 --throughput 200000 --producer-props bootstrap.servers=localhost:9092
+100000 records sent, 50581.689428 records/sec (48.24 MB/sec), 446.13 ms avg latency, 663.00 ms max latency, 473 ms 50th, 592 ms 95th, 644 ms 99th, 660 ms 99.9th.
+
+D:\kafka_2.13-2.7.0\bin\windows>kafka-producer-perf-test.bat --topic test32 --num-records 100000 --record-size 1000 --throughput 200000 --producer-props bootstrap.servers=localhost:9092
+100000 records sent, 52659.294365 records/sec (50.22 MB/sec), 439.13 ms avg latency, 870.00 ms max latency, 370 ms 50th, 826 ms 95th, 865 ms 99th, 869 ms 99.9th.
+```
+
+- 消费者性能测试
+
+kafka-consumer-perf-test.bat --bootstrap-server localhost:9092 --topic test32 --fetch-size 1048576 --messages 100000 --threads 1
+
+```
+D:\kafka_2.13-2.7.0\bin\windows>kafka-consumer-perf-test.bat --bootstrap-server localhost:9092 --topic test32 --fetch-size 1048576 --messages 100000 --threads 1
+WARNING: option [threads] and [num-fetch-threads] have been deprecated and will be ignored by the test
+start.time, end.time, data.consumed.in.MB, MB.sec, data.consumed.in.nMsg, nMsg.sec, rebalance.time.ms, fetch.time.ms, fetch.MB.sec, fetch.nMsg.sec
+2021-12-20 10:37:00:924, 2021-12-20 10:37:01:748, 95.6802, 116.1168, 100329, 121758.4951, 1639967821502, -1639967820678, -0.0000, -0.0001
+
+D:\kafka_2.13-2.7.0\bin\windows>kafka-consumer-perf-test.bat --bootstrap-server localhost:9092 --topic test32 --fetch-size 1048576 --messages 100000 --threads 1
+WARNING: option [threads] and [num-fetch-threads] have been deprecated and will be ignored by the test
+start.time, end.time, data.consumed.in.MB, MB.sec, data.consumed.in.nMsg, nMsg.sec, rebalance.time.ms, fetch.time.ms, fetch.MB.sec, fetch.nMsg.sec
+2021-12-20 10:37:10:088, 2021-12-20 10:37:10:615, 95.6802, 181.5564, 100329, 190377.6091, 1639967830374, -1639967829847, -0.0000, -0.0001
+```
+[spring-kafka-demo](11mq/spring-kafka-demo)
+
+### 作业6.（必做）思考和设计自定义 MQ第二个版本或第三个版本，写代码实现其中至少一个功能点，把设计思路和实现代码，提交到 GitHub。
+
+
+
+---
+
 ## week12作业
 
 ### 作业1.（必做）配置 redis 的主从复制，sentinel 高可用，Cluster 集群。
